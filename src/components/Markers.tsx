@@ -1,19 +1,23 @@
+import { currentStoreState, locationState, mapState } from "@/atom";
 import { StoreType } from "@/interface";
-import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 
 interface MarkerProps {
-  map: any;
   stores: StoreType[];
-  setCurrentStore: Dispatch<SetStateAction<any>>;
 }
 
-export default function Markers({ map, stores, setCurrentStore }: MarkerProps) {
+export default function Markers({ stores }: MarkerProps) {
+  const map = useRecoilValue(mapState);
+  const setCurrentStore = useSetRecoilState(currentStoreState);
+  const [location, setLocation] = useRecoilState(locationState);
+
   const loadKakaoMarkers = useCallback(() => {
     if (map) {
       //좌표 찍기!
       stores?.map((store) => {
-        var imageSrc = store?.bizcnd_code_nm
-            ? `images/markers/${store?.bizcnd_code_nm}.png`
+        var imageSrc = store?.category
+            ? `images/markers/${store?.category}.png`
             : "images/markers/default.png",
           imageSize = new window.kakao.maps.Size(40, 40),
           imageOption = { offset: new window.kakao.maps.Point(27, 69) };
@@ -25,8 +29,8 @@ export default function Markers({ map, stores, setCurrentStore }: MarkerProps) {
         );
 
         let markerPosition = new window.kakao.maps.LatLng(
-          store?.y_dnts,
-          store?.x_cnts
+          store?.lat,
+          store?.lng
         );
 
         let marker = new window.kakao.maps.Marker({
@@ -35,7 +39,7 @@ export default function Markers({ map, stores, setCurrentStore }: MarkerProps) {
         });
         marker.setMap(map);
 
-        let content = `<div class="infoWindow">${store?.upso_nm}</div>`;
+        let content = `<div class="infoWindow">${store?.name}</div>`;
 
         var customOverlay = new window.kakao.maps.CustomOverlay({
           position: markerPosition,
@@ -54,10 +58,11 @@ export default function Markers({ map, stores, setCurrentStore }: MarkerProps) {
         // 선택한 가게를 저장
         window.kakao.maps.event.addListener(marker, "click", function () {
           setCurrentStore(store);
+          setLocation({ ...location, lat: store.lat, lng: store.lng });
         });
       });
     }
-  }, [map, setCurrentStore, stores]);
+  }, [location, map, setCurrentStore, setLocation, stores]);
   useEffect(() => {
     loadKakaoMarkers();
   }, [map, loadKakaoMarkers]);

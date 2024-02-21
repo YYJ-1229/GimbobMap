@@ -8,12 +8,19 @@ import {
   AiOutlineCheck,
   AiOutlinePhone
 } from "react-icons/ai";
+import { StoreType } from "@/interface";
+import { useRouter } from "next/router";
+import { currentStoreState } from "@/atom";
+import { useRecoilState } from "recoil";
+
 interface StoreBoxProps {
-  store: any;
+  store: StoreType | null;
   setStore: Dispatch<SetStateAction<any>>;
 }
 
-export default function StoreBox({ store, setStore }: StoreBoxProps) {
+export default function StoreBox() {
+  const router = useRouter();
+  const [store, setStore] = useRecoilState(currentStoreState);
   return (
     <div className="fixed transition ease-in-out delay-150 inset-x-0 mx-auto bottom-20  rounded-lg shadow-lg max-w-sm md:max-w-xl z-10 w-fill bg-white">
       {store && (
@@ -23,8 +30,8 @@ export default function StoreBox({ store, setStore }: StoreBoxProps) {
               <div className="flex gap-4 items-center">
                 <Image
                   src={
-                    store?.bizcnd_code_nm
-                      ? `/images/markers/${store?.bizcnd_code_nm}.png`
+                    store?.category
+                      ? `/images/markers/${store?.category}.png`
                       : "images/markers/default.png"
                   }
                   alt="image"
@@ -32,8 +39,8 @@ export default function StoreBox({ store, setStore }: StoreBoxProps) {
                   height={40}
                 />
                 <div>
-                  <div className="font-semibold">{store?.upso_nm}</div>
-                  <div className="text-sm">{store?.cob_code_nm}</div>
+                  <div className="font-semibold">{store?.name}</div>
+                  <div className="text-sm">{store?.storeType}</div>
                 </div>
               </div>
               <button type="button" onClick={() => setStore(null)}>
@@ -42,24 +49,24 @@ export default function StoreBox({ store, setStore }: StoreBoxProps) {
             </div>
             <div className="mt-5 flex gap-2 items-center text-sm ">
               <GrMap />
-              {store?.rdn_code_nm}
+              {store?.address}
             </div>
             <div className="mt-2 flex gap-2 items-center ">
               <AiOutlinePhone />
-              {store?.tel_no}
+              {store?.phone}
             </div>
             <div className="mt-2 flex gap-2 items-center ">
               <AiOutlineInfoCircle />
-              {store?.crtfc_gbn_nm}
+              {store?.foodCertifyName}
             </div>
             <div className="mt-2 flex gap-2 items-center ">
               <AiOutlineCheck />
-              {store?.bizcnd_code_nm}
+              {store?.category}
             </div>
           </div>
           <button
             type="button"
-            onClick={() => window.alert("상세보기 작업!")}
+            onClick={() => router.push(`/stores/${store.id}`)}
             className="w-full bg-green-700 hover:bg-green-500 focus:bg-green-500 py-3 text-white font-semibold rounded-b-lg"
           >
             상세보기
