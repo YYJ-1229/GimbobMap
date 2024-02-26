@@ -4,6 +4,8 @@ import { StoreApiResponse, StoreType } from "@/interface";
 
 import prisma from "@/db";
 import axios from "axios";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./auth/[...nextauth]";
 
 interface ResponseType {
   page?: string;
@@ -24,12 +26,15 @@ export default async function handler(
     district = "",
     id = ""
   }: ResponseType = req.query;
+
+  const session = await getServerSession(req, res, authOptions);
+
   const skipPage = parseInt(page) - 1;
 
   if (req.method === "POST") {
     //데이터 생성을 처리!
     const formData = req.body;
-    console.log(formData.address);
+
     const headers = {
       Authorization: `KakaoAK ${process.env.KAKAO_CLIENT_ID}`
     };
@@ -106,6 +111,11 @@ export default async function handler(
         orderBy: { id: "asc" },
         where: {
           id: id ? parseInt(id) : {}
+        },
+        include: {
+          likes: {
+            where: session ? { userId: session.user.id } : {}
+          }
         }
       });
       return res.status(200).json(id ? stores[0] : stores);
