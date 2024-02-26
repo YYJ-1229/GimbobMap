@@ -12,6 +12,7 @@ import { StoreType } from "@/interface";
 import { useRouter } from "next/router";
 import { currentStoreState } from "@/atom";
 import { useRecoilState } from "recoil";
+import Like from "./Like";
 
 interface StoreBoxProps {
   store: StoreType | null;
@@ -38,6 +39,7 @@ export default function StoreBox() {
                   width={40}
                   height={40}
                 />
+
                 <div>
                   <div className="font-semibold">{store?.name}</div>
                   <div className="text-sm">{store?.storeType}</div>
@@ -47,11 +49,15 @@ export default function StoreBox() {
                 <IoMdClose />
               </button>
             </div>
-            <div className="mt-5 flex gap-2 items-center text-sm ">
-              <GrMap />
-              {store?.address}
+            <div className="mt-4 flex justify-between gap-4">
+              <div className="flex gap-2 items-center text-sm col-span-3 ">
+                <GrMap />
+                {store?.address}
+              </div>
+              <Like storeId={store.id} />
             </div>
-            <div className="mt-2 flex gap-2 items-center ">
+
+            <div className="mt-2 flex gap-2 items-center  ">
               <AiOutlinePhone />
               {store?.phone}
             </div>
