@@ -19,6 +19,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   likes         Like[]
+  comments      Comment[]       
 }
 
 model Store {
@@ -32,12 +33,24 @@ model Store {
   storeType String? // cob_code_nm
   foodCertifyName String? // crtfc_gbn_nm
   likes     Like[]
+  comments  Comment[]    
 }
 
 model Like{
   id        Int      @id @default(autoincrement()) // 기본 키
   storeId   Int       // 상점 아이디
   userId    Int       // 회원 아이디
+  createdAt DateTime  @default(now())
+  store     Store     @relation(fields: [storeId], references:[id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references:[id], onDelete: Cascade)
+  @@index([userId , storeId])
+}
+
+model Comment{
+  id        Int      @id @default(autoincrement()) // 기본 키
+  storeId   Int       // 상점 아이디
+  userId    Int       // 회원 아이디
+  body      String
   createdAt DateTime  @default(now())
   store     Store     @relation(fields: [storeId], references:[id], onDelete: Cascade)
   user      User      @relation(fields: [userId], references:[id], onDelete: Cascade)
