@@ -45,8 +45,8 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     }
-  },
-  adapter: PrismaAdapter(prisma)
+  }
+  //adapter: PrismaAdapter(prisma)
 };
 
 export default NextAuth(authOptions);
