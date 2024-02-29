@@ -17,8 +17,8 @@ export default function Markers({ stores }: MarkerProps) {
       //좌표 찍기!
       stores?.map((store) => {
         var imageSrc = store?.category
-            ? `images/markers/${store?.category}.png`
-            : "images/markers/default.png",
+            ? `/images/markers/${store?.category}.png`
+            : "/images/markers/default.png",
           imageSize = new window.kakao.maps.Size(40, 40),
           imageOption = { offset: new window.kakao.maps.Point(27, 69) };
 

@@ -33,7 +33,7 @@ export default function StoreBox() {
                   src={
                     store?.category
                       ? `/images/markers/${store?.category}.png`
-                      : "images/markers/default.png"
+                      : "/images/markers/default.png"
                   }
                   alt="image"
                   width={40}
