@@ -19,7 +19,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <QueryClientProvider client={queryClient}>
           <Layout>
             <Component {...pageProps} />
-            <ToastContainer />
+            <ToastContainer
+              autoClose={1000}
+              pauseOnFocusLoss={false}
+              pauseOnHover={false}
+            />
           </Layout>
           <ReactQueryDevtools />
         </QueryClientProvider>

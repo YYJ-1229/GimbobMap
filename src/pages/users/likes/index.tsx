@@ -43,7 +43,7 @@ export default function LikesPage() {
           })
         )}
       </ul>
-      {likes?.totalPage && likes.totalPage > 0 && (
+      {likes?.totalPage && (
         <Pagination total={likes?.totalPage} page={page} pathname="likes" />
       )}
     </div>
